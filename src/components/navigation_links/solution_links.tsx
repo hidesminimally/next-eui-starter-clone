@@ -1,7 +1,7 @@
 import React from 'react';
 import { EuiIcon, EuiSideNavItemType } from '@elastic/eui';
 
-export const buildSolutionLinks = (
+const buildSolutionLinks = (
   makeAction: (path: string) => () => void
 ): EuiSideNavItemType<unknown>[] => [
   {
@@ -48,3 +48,4 @@ export const buildSolutionLinks = (
     ],
   },
 ];
+export default buildSolutionLinks;

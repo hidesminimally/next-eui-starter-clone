@@ -4,10 +4,14 @@ const fs = require('fs');
 const glob = require('glob');
 const path = require('path');
 const iniparser = require('iniparser');
+const withPWA = require('next-pwa');
 
 const withBundleAnalyzer = require('@next/bundle-analyzer');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const { NormalModuleReplacementPlugin } = require('webpack');
+const withOffline = require('next-offline')
+// const withPWA = require('next-pwa');
+const runtimeCaching = require('next-pwa/cache');
 const WorkerPlugin = require("worker-plugin");
 
 /**
@@ -84,6 +88,12 @@ const nextConfig = {
         test: /react-ace/,
         use: 'null-loader',
       });
+      // config.module.rules.push({
+      //     test: /\.worker\.(js|ts)$/i,
+      //     use: [{
+      //       loader: 'comlink-loader',
+      //     }]
+      // })
 
       // Mock HTMLElement on the server-side
       const definePluginId = config.plugins.findIndex(
@@ -94,7 +104,11 @@ const nextConfig = {
         ...config.plugins[definePluginId].definitions,
         HTMLElement: function () {},
       };
-    } else { 
+    } else {
+      // If in client/browser context, don't use fs module in npm (for sql.js)
+      config.node = {
+        fs: "empty",
+      }
       config.plugins.push(
         new WorkerPlugin({
           // use "self" as the global object when receiving hot updates.
@@ -106,6 +120,24 @@ const nextConfig = {
     // Copy theme CSS files into `public`
     config.plugins.push(
       new CopyWebpackPlugin({ patterns: themeConfig.copyConfig }),
+      // copy the sql.js wasm module from node modules to the distributed assets
+      new CopyWebpackPlugin({
+        patterns: [
+          {
+            from: path.join(
+              __dirname,
+              'node_modules',
+              'sql.js',
+              'dist',
+              'sql-wasm.wasm'
+            ),
+            to: path.join(
+              __dirname,
+              'public',
+            ),
+          }
+        ]
+      }),
 
       // We don't want to load all highlight.js language - provide a mechanism to register just some.
       // If you need to highlight more than just JSON, edit the file below.
@@ -179,7 +211,44 @@ const nextConfig = {
  */
 module.exports = withBundleAnalyzer({
   enabled: process.env.ANALYZE === 'true',
-})(nextConfig);
+  // TODO: do we need withPWA?
+})(withPWA(withOffline({
+  workboxOpts: {
+    // TODO: Why?
+    // These excludes are needed to prevent a 404 that breaks the service worker
+    // initialization. Specifically .min.css files under theme/ and build-manifest.json
+    // cause the breakage. So we exclude them from the precache.
+    exclude: [/\.css$/,/\.json$/],
+    swDest: process.env.NEXT_EXPORT
+      ? 'service-comlink.worker.ts'
+      : 'static/service-comlink.worker.ts',
+    runtimeCaching: [
+      {
+        urlPattern: /^https?.*/,
+        handler: 'NetworkFirst',
+        options: {
+          cacheName: 'offlineCache',
+          expiration: {
+            maxEntries: 200,
+          },
+        },
+      },
+    ],
+  },
+  async rewrites() {
+    return [
+      {
+        source: '/service-comlink.worker.ts',
+        destination: '/_next/static/service-comlink.worker.ts',
+      },
+    ]
+  },
+  ...nextConfig,
+  pwa: {
+      dest: 'public',
+      runtimeCaching, // TODO: Do we still need this if we have runtime caching above?
+  },
+})));
 
 /**
  * Find all EUI themes and construct a theme configuration object.

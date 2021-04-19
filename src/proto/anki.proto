@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package AnkiProto;
+
+message CardTemplateConfig {
+    string q_format = 1;
+    string a_format = 2;
+    string q_format_browser = 3;
+    string a_format_browser = 4;
+    int64 target_deck_id = 5;
+    string browser_font_name = 6;
+    uint32 browser_font_size = 7;
+
+    bytes other = 255;
+}
+

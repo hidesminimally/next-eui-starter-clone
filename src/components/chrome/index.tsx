@@ -12,15 +12,15 @@ import {
   EuiFlexItem,
 } from '@elastic/eui';
 
-import { buildTopLinks } from '../navigation_links/top_links';
-import { buildSolutionLinks } from '../navigation_links/solution_links';
-import { buildExploreLinks } from '../navigation_links/explore_links';
-import { buildAdminLinks } from '../navigation_links/admin_links';
+import Link from 'next/link';
+import buildTopLinks from '../navigation_links/top_links';
+import buildSolutionLinks from '../navigation_links/solution_links';
+import buildExploreLinks from '../navigation_links/explore_links';
+
+import buildAdminLinks from '../navigation_links/admin_links';
 
 import ThemeSwitcher from './theme_switcher';
-
 import styles from './chrome.module.scss';
-import Link from 'next/link';
 
 /**
  * This component render the logo, title and theme icon at the top of
@@ -43,7 +43,7 @@ const AppLogo: FunctionComponent<{ onClick: () => void }> = ({ onClick }) => (
 
     <EuiFlexItem>
       <Link href="/">
-        <a>
+        <a href="/">
           <strong>Elastic UI</strong>
         </a>
       </Link>

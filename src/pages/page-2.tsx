@@ -24,13 +24,13 @@ const SecondPage: FunctionComponent = () => (
     <EuiSpacer />
 
     <Link href="/">
-      <a>Go to Home</a>
+      <a href="/">Go to Home</a>
     </Link>
 
     <EuiSpacer />
 
     <Link href="/my-app/stack-monitoring">
-      <a>Go to Stack Monitoring</a>
+      <a href="/my-app/stack-monitoring">Go to Stack Monitoring</a>
     </Link>
   </>
 );

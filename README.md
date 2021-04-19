@@ -1,128 +1,102 @@
-<p align="center">
-  <img src="src/images/logo_elastic.png" width="60"  alt="Elastic Logo"/>
-</p>
+# en·gram
 
-<h1 align="center">
-  Elastic's Next.js EUI Starter
-</h1>
+/ˈenɡram/
 
-Jump right in to building prototypes with [EUI](https://github.com/elastic/eui).
+noun: engram; plural noun: engrams
 
-_🚩 This starter is not constantly maintained and may get out of sync with the latest EUI release._
-
-## 🚀 Super-quick start using CodeSandbox
-
-1. Go to
-   [https://codesandbox.io/s/github/elastic/next-eui-starter](https://codesandbox.io/s/github/elastic/next-eui-starter)
-   and start editing. CodeSandbox will fork the sandbox when you make
-   changes!
-
-## 🚀 Quick start
-
-1.  **Install yarn**
-
-    This starter expects to use [yarn](https://yarnpkg.com/) to manage
-    dependencies, so go install it.
-
-1.  **Copy the Next.js starter**
-
-    Clone the repository:
-
-    ```sh
-    git clone https://github.com/elastic/next-eui-starter.git my-eui-starter
-    ```
-
-1.  **Start developing.**
-
-    Navigate into your new site’s directory and start it up.
-
-    ```sh
-    cd my-eui-starter/
-
-    # Install depdendencies.
-    yarn
-
-    # Optional: start a new git project
-    rm -rf .git && git init && git add . && git commit -m "Initial commit"
-
-    # Start the dev server
-    yarn dev
-    ```
-
-1.  **Open the source code and start editing!**
-
-    Your site is now running at `http://localhost:3000`!
-
-    Open the `my-eui-starter` directory in your code editor of choice and edit `src/pages/index.tsx`. Save your changes and the browser will update in real time!
-
-1. **Deploy your site to GitHub Pages**
-
-    When you're ready to deploy and share your site to GitHub Pages, you can use the provided `yarn build-docs` script to do so. The first time you do this, you need to do some preparation:
-
-    1. (Optional) If you need to, set the `pathPrefix` option in `next.config.js` to reflect the name of your GitHub repo. The starter kit will try to derive this itself, so you're unlikely to see to do anything here.
-    1. (Optional) Commit the above change
-    1. Create the GitHub pages branch: `git branch gh-pages`
-
-    Then whenever you want to update your site:
-
-    1. Commit any pending changes
-    1. Run `yarn build-docs`
-    1. Publish the `master` and `gh-pages` branches by pushing them to GitHub: `git push origin master gh-pages`
-    1. Edit your repository settings to ensure your repository is configured so that the `gh-pages` branch is used for serving the site. (You only need to do this once, but you have to push the branch before you can change this setting)
-    1. Access your site at https://your-username.github.io/repo-name. There
-       can be a slight delay before changes become visible.
+> a hypothetical permanent change in the brain accounting for the existence of memory; a memory trace.
 
 ---
 
-## 🧐 What's inside?
+# Notes
 
-A quick look at the top-level files and directories you'll see in this project.
+## Log
 
-    .
-    ├── .eslintrc.js
-    ├── .gitignore
-    ├── .next/
-    ├── .prettierrc
-    ├── LICENSE
-    ├── README.md
-    ├── next.config.js
-    ├── node_modules/
-    ├── package.json
-    ├── public/
-    ├── src/
-    ├── tsconfig.json
-    └── yarn.lock
+### BLOCKED/WAITING
+- Import Anki Content
+  - We need to figure out UI for this now that the original option [can't be done](https://developer.mozilla.org/en-US/docs/Web/API/Window/showOpenFilePicker) 
+    1) Suggest a path e.g. https://superuser.com/questions/963526/where-does-anki-store-media
+    2) Ask to export on Anki, then drag that file into here.
 
-1.  **`.eslintrc.js`**: This file configures [ESLint](https://eslint.org/), which will check the code for potential problems and style issues. It also integrates with Prettier for formatting.
+### TODO
+- Create card from imported Anki content
+  1. Migrate to our schema + save content to client storage
+    - Step needs to be fast 
+    - Note need to also import the media that's part of the deck
+      For test, let's use University of Michigan Heart Sound and Murmur Library. DONE
+      
+  2. Create amber content - decks + cards
+  3. Upload entire folder (ignore .colpkg)
+- React Native Web:
+  - UI kit? 
+- Be able to drag and drop from file system 1
+- Emotion/StyledComponent
+- Data Store
+    - Client
+    - Multi-client
+    - Offline
+- Jest + Enzyme
+- MobX / Redux? 
+- Auth: https://nextjs.org/docs/authentication 
 
-2.  **`.gitignore`**: This file tells git which files it should not track / not maintain a version history for.
+### DONE
+- PWA
+- ElasticUI
+- TailwindCSS
+- Prettier / Eslint using Airbnb
+- Sql.js
+  - https://github.com/Project-Setup/github_sql_pwa
 
-3.  **`.next`**: The `next` command line tool uses this for various purposes. You should never need to touch it, but you can delete it without causing any problems.
+### Features
+- Create Card
+- View Card
+- Import content from Anki
 
-4.  **`.prettierrc`**: This is a configuration file for [Prettier](https://prettier.io/). Prettier is a tool to help keep the formatting of your code consistent.
+## Resources
+### Emotion
+Emotion is a CSS-in-JS library and like any other CSS-in-JS, allows you to write CSS styles with JavaScript.
+- https://emotion.sh/docs/ssr#nextjs
+- ✅ Use [this](https://emotion.sh/docs/@emotion/native) for react native support.
+- ✅ Compatible w/ Typescript
 
-5.  **`LICENSE`**: Gatsby is licensed under the MIT license.
 
-6.  **`README.md`**: A text file containing useful reference information about your project.
+### Next.js + PWA
 
-7.  **`next.config.js`**: This file customizes the Next.js build process so that it can work with EUI.
+- https://itnext.io/pwa-with-next-js-create-next-app-in-2020-%EF%B8%8F-9ee0e1a6313d
+- https://github.com/vercel/next.js/tree/canary/examples/progressive-web-app
 
-8.  **`node_modules/`**: This directory contains all of the modules of code that your project depends on (npm packages) are automatically installed.
+### Lint
 
-9. **`package.json`**: A manifest file for Node.js projects, which includes things like metadata (the project’s name, author, etc). This manifest is how npm knows which packages to install for your project.
+- https://github.com/wesbos/eslint-config-wesbos/tree/typescript
 
-10. **`public/`**: Files that will never change can be put here. This starter project automatically puts EUI theme files here during the build
+### Intellij
 
-11. **`src/`**: This directory will contain all of the code related to what you will see on the front-end of your site (what you see in the browser) such as your site header or a page template. `src` is a convention for “source code”.
+https://github.com/wesbos/eslint-config-wesbos/issues/43#issuecomment-652554103
 
-12. **`tsconfig.json`**: This file configures the [TypeScript](https://www.typescriptlang.org/) compiler
+# NextJS Typescript Boilerplate
 
-13. **`yarn.lock`** (See `package.json` below, first). This is an automatically generated file based on the exact versions of your npm dependencies that were installed for your project. **(You won’t change this file directly, but you need to commit any changes to git).**
+Bootstrap a developer-friendly NextJS app configured with:
 
-## 🎓 Learning Next.js
+- [Typescript](https://www.typescriptlang.org/)
+- Linting with [ESLint](https://eslint.org/)
+- Formatting with [Prettier](https://prettier.io/)
+- Linting, typechecking and formatting on by default using [`husky`](https://github.com/typicode/husky) for commit hooks
+- Testing with [Jest](https://jestjs.io/) and [`react-testing-library`](https://testing-library.com/docs/react-testing-library/intro)
 
-Looking for more guidance? Full documentation for Next.js lives [on the website](https://nextjs.org/). You probably want to being by following the [Getting Started Guide](https://nextjs.org/learn/basics/getting-started).
+## Deploy your own
 
-## Other features
+Deploy the example using [Vercel](https://vercel.com?utm_source=github&utm_medium=readme&utm_campaign=next-example):
 
-* Bundle analysis - run `yarn analyze` and two windows will open in your browser, showing how big your server and client bundles are, and where that data is coming from. You can use this information to work out where you're sending too much data to the client, and speed up your pages.
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/external?repository-url=https://github.com/vercel/next.js/tree/canary/examples/with-typescript-eslint-jest&project-name=with-typescript-eslint-jest&repository-name=with-typescript-eslint-jest)
+
+## How to use
+
+Execute [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app) with [npm](https://docs.npmjs.com/cli/init) or [Yarn](https://yarnpkg.com/lang/en/docs/cli/create/) to bootstrap the example:
+
+```bash
+npx create-next-app --example with-typescript-eslint-jest with-typescript-eslint-jest-app
+# or
+yarn create next-app --example with-typescript-eslint-jest with-typescript-eslint-jest-app
+```
+
+Deploy it to the cloud with [Vercel](https://vercel.com/new?utm_source=github&utm_medium=readme&utm_campaign=next-example) ([Documentation](https://nextjs.org/docs/deployment)).
