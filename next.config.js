@@ -8,6 +8,7 @@ const iniparser = require('iniparser');
 const withBundleAnalyzer = require('@next/bundle-analyzer');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const { NormalModuleReplacementPlugin } = require('webpack');
+const WorkerPlugin = require("worker-plugin");
 
 /**
  * If you are deploying your site under a directory other than `/` e.g.
@@ -93,6 +94,13 @@ const nextConfig = {
         ...config.plugins[definePluginId].definitions,
         HTMLElement: function () {},
       };
+    } else { 
+      config.plugins.push(
+        new WorkerPlugin({
+          // use "self" as the global object when receiving hot updates.
+          globalObject: "self",
+        })
+      );
     }
 
     // Copy theme CSS files into `public`

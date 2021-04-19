@@ -1,103 +1,60 @@
-import React, { FunctionComponent } from 'react';
-import {
-  EuiButton,
-  EuiCode,
-  EuiFlexGroup,
-  EuiFlexItem,
-  EuiLink,
-  EuiSpacer,
-  EuiText,
-  EuiTitle,
-} from '@elastic/eui';
+import React from "react";
 
-import MyComponent from '../components/my_component';
+import * as Comlink from "comlink";
+import { WorkerApi } from '../../workers/comlink.worker';
 
-const Index: FunctionComponent = () => (
-  <>
-    <EuiFlexGroup>
-      <EuiFlexItem>
-        <EuiTitle size="l">
-          <h1>Elastic&apos;s Next.js EUI Starter</h1>
-        </EuiTitle>
-      </EuiFlexItem>
+const IndexPage = () => {
+  // for standard
+  const [latestMessage, setLatestMessage] = React.useState("");
+  const workerRef = React.useRef<Worker>();
 
-      <EuiFlexItem grow={false}>
-        <EuiButton
-          iconType="logoGithub"
-          href="https://github.com/elastic/next-eui-starter"
-          fill>
-          Open in Github
-        </EuiButton>
-      </EuiFlexItem>
-    </EuiFlexGroup>
+  // for comlink
+  const [comlinkMessage, setComlinkMessage] = React.useState("");
+  const comlinkWorkerRef = React.useRef<Worker>();
+  const comlinkWorkerApiRef = React.useRef<Comlink.Remote<WorkerApi>>();
 
-    <EuiSpacer />
+  React.useEffect(() => {
+    // Comlink worker
+    comlinkWorkerRef.current = new Worker("../workers/comlink.worker", {
+      type: "module",
+    });
+    comlinkWorkerApiRef.current = Comlink.wrap<WorkerApi>(
+      comlinkWorkerRef.current
+    );
+    return () => {
+      workerRef.current?.terminate();
+      comlinkWorkerRef.current?.terminate();
+    };
+  }, []);
 
-    <EuiText>
-      <h2>Getting started</h2>
+  const handleWork = React.useCallback(async () => {
+    workerRef.current?.postMessage(100000);
+  }, []);
 
-      <p>
-        This{' '}
-        <EuiLink external={true} target="_blank" href="https://nextjs.org/">
-          Next.js
-        </EuiLink>{' '}
-        EUI Starter is intended to help you quickly build and deploy prototypes
-        for Kibana apps with the{' '}
-        <EuiLink
-          href="https://elastic.github.io/eui/"
-          external={true}
-          target="_blank">
-          EUI library
-        </EuiLink>
-        .
-      </p>
+  const handleComlinkWork = async () => {
+    const msg = await comlinkWorkerApiRef.current?.getName();
+    setComlinkMessage(`Comlink response => ${msg}`);
+  };
 
-      <h3>Try it out in CodeSandbox</h3>
+  return (
+    <>
+      <h1>Hello Next.js, TypeScript, Web Worker and Comlink👋</h1>
+      <div>
+        <h2>Let's use Standard Web worker!</h2>
+        <button onClick={handleWork}>Calculate PI by standard worker</button>
+        <p>Result: {latestMessage}</p>
+      </div>
+      <div>
+        <h2>
+          Let's use <em>Comlink</em> Web worker!
+        </h2>
+        <button onClick={handleComlinkWork}>
+          fetch random word by Comlink
+        </button>
+        <p>Result: {comlinkMessage}</p>
+      </div>
+    </>
+  );
+};
 
-      <p>
-        Simply go to{' '}
-        <EuiLink
-          href="https://codesandbox.io/s/github/elastic/next-eui-starter"
-          external={true}
-          target="_blank">
-          https://codesandbox.io/s/github/elastic/next-eui-starter
-        </EuiLink>
-        . CodeSandbox will fork the template when you make changes!
-      </p>
-
-      <h3>Clone the project</h3>
-      <p>
-        To use this starter, simply run{' '}
-        <EuiCode>
-          git clone https://github.com/elastic/next-eui-starter my-app
-        </EuiCode>
-        . Then <EuiCode>cd my-app</EuiCode> and start editing.
-      </p>
-
-      <h3>Running locally</h3>
-      <p>
-        <EuiCode>yarn dev</EuiCode>
-      </p>
-
-      <h3>Running in production mode:</h3>
-      <p>
-        <EuiCode>yarn build</EuiCode>
-      </p>
-      <p>Then:</p>
-      <p>
-        <EuiCode>yarn start</EuiCode>
-      </p>
-
-      <h3>Deploying to GitHub Pages</h3>
-      <p>
-        Make sure that your repo has Github Pages enabled in settings. Then run{' '}
-        <EuiCode>yarn build-docs</EuiCode>, commit the results and push to
-        GitHub.
-      </p>
-
-      <MyComponent />
-    </EuiText>
-  </>
-);
-
-export default Index;
+export default IndexPage;
